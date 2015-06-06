@@ -1,0 +1,194 @@
+        //    public ScheduleGenerator(NBA NBA)
+        //    {
+        //        this.NBA = NBA;
+        //        gameDays = new List<GameDay>();
+        //    }
+
+        //    public Schedule GenerateSeason()
+        //    {
+        //        foreach (var team in NBA.Teams)
+        //        {
+        //            var opponents = new List<Team>();
+        //            opponents.AddRange(NBA.Teams);
+        //            opponents.Remove(team);
+        //            CreateMatchups(team, opponents);
+        //            Init(team);
+        //            MatchTeams(team, divisionOpponents, 4);
+        //            MatchTeams(team, conferenceOpponents, 3);
+        //            Debug(team);
+        //            Console.Clear();
+        //        }
+
+        //        for (int i = 1; i <= 6; i++)
+        //        {
+        //            unmatchedTeams = new List<Team>();
+        //            foreach (var team in NBA.Teams)
+        //            {
+        //                GiveFourthConferenceGamesToTeams(team, i);
+        //                MatchUnmatchedTeams(team);
+        //                Debug(team);
+        //            }
+        //            Console.Clear();
+        //        }
+
+        //        foreach (var team in NBA.Teams)
+        //        {
+        //            nonConferenceOpponents = new List<Team>();
+        //            var oppositeConference = NBA.Conferences.Single(conf => conf.Name != team.Division.Conference.Name);
+        //            nonConferenceOpponents.AddRange(oppositeConference.TeamsInSpecificConference().ToList());
+        //            MatchTeams(team, nonConferenceOpponents, 2);
+        //            Debug(team);
+        //        }
+
+        //        games = CreateGames();
+
+        //        return new Schedule(gameDays);
+        //    }
+
+        //    public void MatchUnmatchedTeams(Team team)
+        //    {
+        //        var opponent = unmatchedTeams.FirstOrDefault();
+        //        if (opponent == null)
+        //        {
+        //            unmatchedTeams.Add(team);
+        //            return;
+        //        }
+
+        //        var matchup = GetMatchupInformation(team, opponent);
+        //        matchup.GamesLeftToPlay++;
+        //        unmatchedTeams.Remove(opponent);
+        //    }
+
+        //    public void Debug(Team team)
+        //    {
+        //        var test = NBA.Season.MatchupInformations.Where(x => x.TeamOne.Name == team.Name || x.TeamTwo.Name == team.Name).ToList();
+        //        var sum = test.Sum(matchupInformation => matchupInformation.GamesLeftToPlay);
+        //        Console.WriteLine(string.Format("Team {0} - {1} times", team.Name, sum));
+        //    }
+
+        //    public void CreateMatchups(Team team, List<Team> opponents)
+        //    {
+        //        foreach (var opponent in opponents)
+        //        {
+        //            var matchup = GetMatchupInformation(team, opponent);
+
+        //            if (matchup != null) continue;
+
+        //            matchup = new MatchupInformation(team, opponent);
+        //            NBA.Season.MatchupInformations.Add(matchup);
+        //        }
+        //    }
+
+        //    private void MatchTeams(Team team, IEnumerable<Team> opponents, int gameCount)
+        //    {
+        //        foreach (var opponent in opponents)
+        //        {
+        //            var matchup = GetMatchupInformation(team, opponent);
+
+        //            if (matchup.GamesLeftToPlay == 0)
+        //            {
+        //                matchup.GamesLeftToPlay = gameCount;
+        //            }
+        //            else if (matchup.GamesLeftToPlay != gameCount)
+        //            {
+        //                matchup.GamesLeftToPlay += (gameCount - matchup.GamesLeftToPlay);
+        //            }
+        //        }
+        //    }
+
+        //    private MatchupInformation GetMatchupInformation(Team teamOne, Team teamTwo)
+        //    {
+        //        return NBA.Season.MatchupInformations.SingleOrDefault(x =>
+        //                    (x.TeamOne.Name == teamOne.Name && x.TeamTwo.Name == teamTwo.Name) ||
+        //                    (x.TeamOne.Name == teamTwo.Name && x.TeamTwo.Name == teamOne.Name));
+        //    }
+
+        //    public void Init(Team team)
+        //    {
+        //        divisionOpponents = new List<Team>();
+        //        nonConferenceOpponents = new List<Team>();
+
+        //        divisionOpponents.AddRange(team.Division.Teams);
+        //        divisionOpponents.Remove(team);
+
+        //        conferenceOpponents = new List<Team>();
+        //        conferenceOpponents.AddRange(team.Division.Conference.TeamsInSpecificConference().ToList().OrderBy(i => Util.RandomInteger()).ToList());
+        //        conferenceOpponents.Remove(team);
+
+        //        foreach (var divisionOpponent in divisionOpponents)
+        //        {
+        //            conferenceOpponents.Remove(divisionOpponent);
+        //        }
+        //    }
+
+        //    public void GiveFourthConferenceGamesToTeams(Team team, int max)
+        //    {
+        //        var conferenceTeams = new List<Team>();
+        //        conferenceTeams.AddRange(team.Division.Conference.TeamsInSpecificConference().ToList().OrderBy(i => Util.RandomInteger()).ToList());
+
+        //        var divisionTeams = new List<Team>();
+        //        divisionTeams.AddRange(team.Division.Teams);
+
+        //        foreach (var divisionOpponent in divisionTeams)
+        //        {
+        //            conferenceTeams.Remove(divisionOpponent);
+        //        }
+
+        //        foreach (var opponent in conferenceTeams)
+        //        {
+        //            if (team.ExtraConferenceOpponentCount < max)
+        //            {
+        //                if (conferenceTeams.Count(x => x.ExtraConferenceOpponentCount == max) == 10)
+        //                {
+        //                    break;
+        //                }
+
+        //                if (opponent.ExtraConferenceOpponentCount >= max)
+        //                {
+        //                    continue;
+        //                }
+
+        //                var matchup = GetMatchupInformation(team, opponent);
+        //                if (matchup.GamesLeftToPlay != 4)
+        //                {
+        //                    matchup.GamesLeftToPlay = 4;
+        //                    team.ExtraConferenceOpponentCount++;
+        //                    opponent.ExtraConferenceOpponentCount++;
+        //                    continue;
+        //                }
+        //            }
+        //            break;
+        //        }
+        //    }
+
+        //    public List<Game> CreateGames()
+        //    {
+        //        var listOfGames = new List<Game>();
+        //        foreach (var matchup in NBA.Season.MatchupInformations)
+        //        {
+        //            while (matchup.GamesLeftToPlay != 0)
+        //            {
+        //                if (matchup.TeamOneHomeGames == matchup.TeamTwoHomeGames)
+        //                {
+        //                    listOfGames.Add(new Game(matchup.TeamOne, matchup.TeamTwo));
+        //                    matchup.TeamOneHomeGames++;
+        //                    matchup.GamesLeftToPlay--;
+        //                }
+        //                else
+        //                {
+        //                    listOfGames.Add(new Game(matchup.TeamTwo, matchup.TeamOne));
+        //                    matchup.TeamTwoHomeGames++;
+        //                    matchup.GamesLeftToPlay--;
+        //                }
+        //            }
+        //        }
+        //        return listOfGames;
+        //    }
+        //}
+
+        //public enum OpponentType
+        //{
+        //    Division,
+        //    Conference,
+        //    NonConference
+        //}
