@@ -38,9 +38,4 @@ namespace ApiReader
             return Name;
         }
     }
-
-    public class Data
-    {
-        public Dictionary<string, string> Mapping { get; set; }
-    }
 }

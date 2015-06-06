@@ -42,12 +42,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Coach.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="PlayerBuilder.cs" />
+    <Compile Include="Models\Stats\AdvancedStats.cs" />
+    <Compile Include="Models\Stats\BaseStats.cs" />
+    <Compile Include="Models\Coach.cs" />
+    <Compile Include="Models\Stats\MiscStats.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Builders\PlayerBuilder.cs" />
+    <Compile Include="Models\Stats\PlayerStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Team.cs" />
-    <Compile Include="TeamBuilder.cs" />
+    <Compile Include="Models\Stats\ScoringStats.cs" />
+    <Compile Include="Models\Enums\StatDashboard.cs" />
+    <Compile Include="Models\Team.cs" />
+    <Compile Include="Builders\TeamBuilder.cs" />
+    <Compile Include="Models\Stats\TraditionalStats.cs" />
+    <Compile Include="Models\Stats\UsageStats.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

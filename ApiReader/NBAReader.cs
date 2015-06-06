@@ -53,53 +53,32 @@ namespace ApiReader
         /// <summary>
         /// Split statistical data for a player with a lot of parameters...
         /// </summary>
-        /// <param name="playerId"></param>
-        /// <param name="perMode"></param>
-        /// <param name="plusMinus"></param>
-        /// <param name="measureType"></param>
-        /// <param name="paceAdjust"></param>
-        /// <param name="rank"></param>
-        /// <param name="season"></param>
-        /// <param name="seasonType"></param>
-        /// <param name="outcome"></param>
-        /// <param name="location"></param>
-        /// <param name="month"></param>
-        /// <param name="seasonSegment"></param>
-        /// <param name="dateFrom"></param>
-        /// <param name="dateTo"></param>
-        /// <param name="opponentTeamId"></param>
-        /// <param name="vsConference"></param>
-        /// <param name="vsDivision"></param>
-        /// <param name="gameSegment"></param>
-        /// <param name="period"></param>
-        /// <param name="lastNGames"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public Response GetPlayerSplits(string playerId, string perMode, string plusMinus, string measureType, string paceAdjust,
-            string rank, string season, string seasonType, string outcome, string location, string month, string seasonSegment,
-            string dateFrom, string dateTo, string opponentTeamId, string vsConference, string vsDivision, string gameSegment, string period, string lastNGames)
+        public Response GetPlayerSplits(PlayerSplitOptions options)
         {
             var parameters = new List<Parameter>
                              {
-                                 new Parameter("PlayerId", playerId),
-                                 new Parameter("PerMode", perMode),
-                                 new Parameter("PlusMinus", plusMinus),
-                                 new Parameter("MeasureType", measureType),
-                                 new Parameter("PaceAdjust", paceAdjust),
-                                 new Parameter("Rank", rank),
-                                 new Parameter("Season", season),
-                                 new Parameter("SeasonType", seasonType),
-                                 new Parameter("Outcome", outcome),
-                                 new Parameter("Location", location),
-                                 new Parameter("Month", month),
-                                 new Parameter("SeasonSegment", seasonSegment),
-                                 new Parameter("DateFrom", dateFrom),
-                                 new Parameter("DateTo", dateTo),
-                                 new Parameter("OpponentTeamId", opponentTeamId),
-                                 new Parameter("vsConference", vsConference),
-                                 new Parameter("vsDivision", vsDivision),
-                                 new Parameter("GameSegment", gameSegment),
-                                 new Parameter("Period", period),
-                                 new Parameter("LastNGames", lastNGames),
+                                 new Parameter("PlayerId", options.PlayerId),
+                                 new Parameter("PerMode", options.PerMode),
+                                 new Parameter("PlusMinus", options.PlusMinus),
+                                 new Parameter("MeasureType", options.MeasureType),
+                                 new Parameter("PaceAdjust", options.PaceAdjust),
+                                 new Parameter("Rank", options.Rank),
+                                 new Parameter("Season", options.Season),
+                                 new Parameter("SeasonType", options.SeasonType),
+                                 new Parameter("Outcome", options.Outcome),
+                                 new Parameter("Location", options.Location),
+                                 new Parameter("Month", options.Month),
+                                 new Parameter("SeasonSegment", options.SeasonSegment),
+                                 new Parameter("DateFrom", options.DateFrom),
+                                 new Parameter("DateTo", options.DateTo),
+                                 new Parameter("OpponentTeamId", options.OpponentTeamId),
+                                 new Parameter("vsConference", options.VsConference),
+                                 new Parameter("vsDivision", options.VsDivision),
+                                 new Parameter("GameSegment", options.GameSegment),
+                                 new Parameter("Period", options.Period),
+                                 new Parameter("LastNGames", options.LastNGames),
                                 };
 
             return GetInformation(NBAEndPoints.PlayerSplits, parameters);
