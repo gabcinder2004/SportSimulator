@@ -18,12 +18,12 @@ namespace BasketballPlayerSimulator
             Teams = new List<Team>();
             Players = new List<Player>();
             Conferences = new List<Conference>();
-            Players = RosterImporter.ImportPlayers();
+            Players = RosterImporter_OLD.ImportPlayers();
             InstantiateTeams();
             OrganizePlayersIntoTeams();
             InstantiateTeamSetup();
             PutTeamsInDivision();
-            var schedule = ScheduleImporter.ImportSchedule(this);
+            var schedule = ScheduleImporter_OLD.ImportSchedule(this);
             Season = new Season(82, schedule) { Standings = new List<Standing>() };
             CreateStandings();
         }

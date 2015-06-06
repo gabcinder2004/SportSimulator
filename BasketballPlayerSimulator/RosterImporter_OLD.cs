@@ -6,7 +6,7 @@ using Microsoft.Office.Interop.Excel;
 
 namespace BasketballPlayerSimulator
 {
-    public static class RosterImporter
+    public static class RosterImporter_OLD
     {
         private static Application appExcel;
         private static Workbook newWorkbook;

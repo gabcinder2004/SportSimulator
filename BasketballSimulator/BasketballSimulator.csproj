@@ -45,10 +45,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ApiReader\ApiReader.csproj">
-      <Project>{d324d8a0-5796-4201-86ff-49790f1954b5}</Project>
-      <Name>ApiReader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BasketballPlayerSimulator\BasketballService.csproj">
       <Project>{a34d8891-160e-4cc2-8a6d-5a4270fb6b4e}</Project>
       <Name>BasketballService</Name>

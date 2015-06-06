@@ -1,6 +1,6 @@
 ﻿namespace BasketballPlayerSimulator
 {
-    public class Rating
+    public class RatingOld
     {
         public int Overall { get; set; }
         public int Offense { get; set; }
@@ -10,7 +10,7 @@
         public int LongRange { get; set; }
 
         //For Players
-        public Rating(int overall, int offense, int defense, int shortRange, int mediumRange, int longRange)
+        public RatingOld(int overall, int offense, int defense, int shortRange, int mediumRange, int longRange)
         {
             Overall = overall;
             Offense = offense;
@@ -21,7 +21,7 @@
         }
 
         //For Teams
-        public Rating(int overall)
+        public RatingOld(int overall)
         {
             Overall = overall;
         }

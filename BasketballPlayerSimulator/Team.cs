@@ -1,35 +1,28 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace BasketballPlayerSimulator
 {
     public class Team
     {
-        public int ExtraConferenceOpponentCount;
-        public TeamName Name { get; set; }
-        public List<Player> Players { get; set; }
-        public Division Division { get; set; }
-        public Rating Rating
-        {
-            get
-            {
-                var totalRating = Players.Sum(player => player.Rating.Overall);
-                return new Rating(totalRating / Players.Count);
-            }
-        }
-        public Schedule Schedule { get; set; }
+        public string Id { get; set; }
+        public string Abbreviation { get; set; }
+        public string City { get; set; }
+        public string Name { get; set; }
+        public string Conference { get; set; }
+        public string Division { get; set; }
+        
+        public List<Player> Roster { get; set; }
+        public List<Coach> Coaches { get; set; }
 
-
-        public Team(TeamName name)
+        public Team()
         {
-            Name = name;
-            Players = new List<Player>();
-            ExtraConferenceOpponentCount = 0;
+            Roster = new List<Player>();
+            Coaches = new List<Coach>();
         }
 
         public override string ToString()
         {
-            return Name.ToString();
+            return Abbreviation;
         }
     }
 }

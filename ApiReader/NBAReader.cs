@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ApiReader
 {
-    public class NBAReader
+    public class NbaReader
     {
         private const string BaseUrl = @"http://stats.nba.com/stats/";
 
-        private readonly Dictionary<NBAEndPoints, string> EndPoints = new Dictionary<NBAEndPoints, string>{
+        private readonly Dictionary<NBAEndPoints, string> _endPoints = new Dictionary<NBAEndPoints, string>{
                                 { NBAEndPoints.CommonPlayerInfo, "commonplayerinfo" },
                                 { NBAEndPoints.CommonAllPlayers, "commonallplayers" },
                                 { NBAEndPoints.PlayerSplits, "playerdashboardbygeneralsplits"},
@@ -166,7 +166,7 @@ namespace ApiReader
         /// <returns></returns>
         private Response GetInformation(NBAEndPoints endpoint, List<Parameter> parameters)
         {
-            var fullUrl = string.Format("{0}{1}", BaseUrl, EndPoints[endpoint]);
+            var fullUrl = string.Format("{0}{1}", BaseUrl, _endPoints[endpoint]);
             var response = ApiCaller.ExecuteCall<Response>(fullUrl, parameters);
             response.OrganizeResults();
             return response;
