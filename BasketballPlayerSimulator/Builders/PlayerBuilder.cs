@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ApiReader;
 using BasketballPlayerSimulator.Models.Stats;
@@ -16,20 +18,9 @@ namespace BasketballPlayerSimulator
 
         public void GetPlayerSplits(Player player, string targetSeason, string seasonType)
         {
-            var dashboards = new List<StatDashboard>()
-            {
-                StatDashboard.Overall,
-                StatDashboard.Location,
-                StatDashboard.WinLosses,
-                StatDashboard.Month,
-                StatDashboard.PrePostAllStar,
-                StatDashboard.StartingPosition,
-                StatDashboard.DaysRest
-            };
-
-            var playerStats = player.Stats.Any(x => x.Season == targetSeason)
-                ? player.Stats.Single(x => x.Season == targetSeason)
-                : new PlayerStats(targetSeason);
+            var playerStats = player.Stats.Any(x => x.Season == targetSeason && x.SeasonType == seasonType)
+                ? player.Stats.Single(x => x.Season == targetSeason && x.SeasonType == seasonType)
+                : new PlayerStats(targetSeason, seasonType);
 
             var playerSplitOptions = new PlayerSplitOptions
             {
@@ -37,7 +28,7 @@ namespace BasketballPlayerSimulator
                 PlayerId = player.Id,
                 PerMode = "PerGame",
                 SeasonType = seasonType,
-                PlusMinus = "Y",
+                PlusMinus = "N",
                 PaceAdjust = "N",
                 Rank = "N",
                 Outcome = string.Empty,
@@ -54,31 +45,58 @@ namespace BasketballPlayerSimulator
                 LastNGames = "0",
             };
 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
             // Traditional
             playerSplitOptions.MeasureType = "Base";
             var traditionalPlayerSplits = NbaReader.GetPlayerSplits(playerSplitOptions);
             traditionalPlayerSplits.ResultSets.ForEach(resultSet => GetBaseStats(playerStats, resultSet.Data));
+
+            var traditionalTime = stopwatch.Elapsed;
+            stopwatch.Restart();
 
             // Advanced stats
             playerSplitOptions.MeasureType = "Advanced";
             var advancedPlayerSplits = NbaReader.GetPlayerSplits(playerSplitOptions);
             advancedPlayerSplits.ResultSets.ForEach(resultSet => GetAdvancedStats(playerStats, resultSet.Data));
 
+            var advancedTime = stopwatch.Elapsed;
+            stopwatch.Restart();
+
             // Misc stats
             playerSplitOptions.MeasureType = "Misc";
             var miscPlayerSplits = NbaReader.GetPlayerSplits(playerSplitOptions);
             miscPlayerSplits.ResultSets.ForEach(resultSet => GetMiscStats(playerStats, resultSet.Data));
+
+            var miscTime = stopwatch.Elapsed;
+            stopwatch.Restart();
 
             // Scoring stats
             playerSplitOptions.MeasureType = "Scoring";
             var scoringPlayerSplits = NbaReader.GetPlayerSplits(playerSplitOptions);
             scoringPlayerSplits.ResultSets.ForEach(resultSet => GetScoringStats(playerStats, resultSet.Data));
 
+            var scoringTime = stopwatch.Elapsed;
+            stopwatch.Restart();
+
             // Usage stats
             playerSplitOptions.MeasureType = "Usage";
             var usagePlayerSplits = NbaReader.GetPlayerSplits(playerSplitOptions);
             usagePlayerSplits.ResultSets.ForEach(resultSet => GetUsageStats(playerStats, resultSet.Data));
 
+            var usageTime = stopwatch.Elapsed;
+            stopwatch.Stop();
+
+            player.Stats.Add(playerStats);
+            Console.WriteLine("{0} : {1} : {2}", player.Name, targetSeason, seasonType);
+            Console.WriteLine("Traditional: {0}", traditionalTime);
+            Console.WriteLine("Advanced: {0}", advancedTime);
+            Console.WriteLine("Misc: {0}", miscTime);
+            Console.WriteLine("Scoring: {0}", scoringTime);
+            Console.WriteLine("Usage: {0}", usageTime);
+            Console.WriteLine("--------------------------------------------------------------");
+            Console.WriteLine();
         }
 
         private void GetUsageStats(PlayerStats playerStats, List<Data> dataSet)
@@ -88,9 +106,6 @@ namespace BasketballPlayerSimulator
                 GroupSet = data.Mapping["GROUP_SET"],
                 GroupValue = data.Mapping["GROUP_VALUE"],
                 GamesPlayed = data.Mapping["GP"],
-                Wins = data.Mapping["W"],
-                Losses = data.Mapping["L"],
-                WinPercent = data.Mapping["W_PCT"],
                 Minutes = data.Mapping["MIN"],
                 UsagePercent = data.Mapping["USG_PCT"],
                 PercentOfTeamFieldGoalsMade = data.Mapping["PCT_FGM"],
@@ -120,9 +135,6 @@ namespace BasketballPlayerSimulator
                 GroupSet = data.Mapping["GROUP_SET"],
                 GroupValue = data.Mapping["GROUP_VALUE"],
                 GamesPlayed = data.Mapping["GP"],
-                Wins = data.Mapping["W"],
-                Losses = data.Mapping["L"],
-                WinPercent = data.Mapping["W_PCT"],
                 Minutes = data.Mapping["MIN"],
                 PercentOfFieldGoalsAttemptedTwoPointer = data.Mapping["PCT_FGA_2PT"],
                 PercentOfFieldGoalsAttemptedThreePointer = data.Mapping["PCT_FGA_3PT"],

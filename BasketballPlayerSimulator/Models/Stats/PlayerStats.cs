@@ -4,9 +4,10 @@ namespace BasketballPlayerSimulator.Models.Stats
 {
     public class PlayerStats
     {
-        public PlayerStats(string season)
+        public PlayerStats(string season, string seasonType)
         {
             Season = season;
+            SeasonType = seasonType;
             Traditional = new Dictionary<string, TraditionalStats>();
             Advanced = new Dictionary<string, AdvancedStats>();
             Misc = new Dictionary<string, MiscStats>();
@@ -15,6 +16,7 @@ namespace BasketballPlayerSimulator.Models.Stats
         }
 
         public string Season { get; set; }
+        public string SeasonType { get; set; }
         public Dictionary<string, TraditionalStats> Traditional { get; set; }
         public Dictionary<string, AdvancedStats> Advanced { get; set; }
         public Dictionary<string, MiscStats> Misc { get; set; }
