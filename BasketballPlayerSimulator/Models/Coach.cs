@@ -1,4 +1,4 @@
-﻿namespace BasketballPlayerSimulator
+﻿namespace BasketballPlayerSimulator.Models
 {
     public class Coach
     {

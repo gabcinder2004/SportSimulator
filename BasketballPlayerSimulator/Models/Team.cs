@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BasketballPlayerSimulator
+namespace BasketballPlayerSimulator.Models
 {
     public class Team
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using BasketballPlayerSimulator.Models.Stats;
 
-namespace BasketballPlayerSimulator
+namespace BasketballPlayerSimulator.Models
 {
     public class Player
     {

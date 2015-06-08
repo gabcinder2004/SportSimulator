@@ -1,4 +1,4 @@
-namespace BasketballPlayerSimulator
+namespace BasketballPlayerSimulator.Models.Enums
 {
     public enum StatDashboard
     {

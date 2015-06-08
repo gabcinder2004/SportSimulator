@@ -1,6 +1,4 @@
-using BasketballPlayerSimulator.Models.Stats;
-
-namespace BasketballPlayerSimulator
+namespace BasketballPlayerSimulator.Models.Stats
 {
     public class ScoringStats : BaseStats
     {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ApiReader
 {
@@ -82,6 +84,40 @@ namespace ApiReader
                                 };
 
             return GetInformation(NBAEndPoints.PlayerSplits, parameters);
+        }  
+        
+        /// <summary>
+        /// Split statistical data for a player with a lot of parameters...
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public Response GetPlayerSplitsAsync(PlayerSplitOptions options)
+        {
+            var parameters = new List<Parameter>
+                             {
+                                 new Parameter("PlayerId", options.PlayerId),
+                                 new Parameter("PerMode", options.PerMode),
+                                 new Parameter("PlusMinus", options.PlusMinus),
+                                 new Parameter("MeasureType", options.MeasureType),
+                                 new Parameter("PaceAdjust", options.PaceAdjust),
+                                 new Parameter("Rank", options.Rank),
+                                 new Parameter("Season", options.Season),
+                                 new Parameter("SeasonType", options.SeasonType),
+                                 new Parameter("Outcome", options.Outcome),
+                                 new Parameter("Location", options.Location),
+                                 new Parameter("Month", options.Month),
+                                 new Parameter("SeasonSegment", options.SeasonSegment),
+                                 new Parameter("DateFrom", options.DateFrom),
+                                 new Parameter("DateTo", options.DateTo),
+                                 new Parameter("OpponentTeamId", options.OpponentTeamId),
+                                 new Parameter("vsConference", options.VsConference),
+                                 new Parameter("vsDivision", options.VsDivision),
+                                 new Parameter("GameSegment", options.GameSegment),
+                                 new Parameter("Period", options.Period),
+                                 new Parameter("LastNGames", options.LastNGames),
+                                };
+
+            return GetInformationAsync(NBAEndPoints.PlayerSplits, parameters);
         }
 
         /// <summary>
@@ -147,6 +183,20 @@ namespace ApiReader
         {
             var fullUrl = string.Format("{0}{1}", BaseUrl, _endPoints[endpoint]);
             var response = ApiCaller.ExecuteCall<Response>(fullUrl, parameters);
+            response.OrganizeResults();
+            return response;
+        } 
+        
+        /// <summary>
+        /// Our main helper method used to call the APICaller
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private Response GetInformationAsync(NBAEndPoints endpoint, List<Parameter> parameters)
+        {
+            var fullUrl = string.Format("{0}{1}", BaseUrl, _endPoints[endpoint]);
+            var response = ApiCaller.ExecuteCallAsync<Response>(fullUrl, parameters).Result;
             response.OrganizeResults();
             return response;
         }
