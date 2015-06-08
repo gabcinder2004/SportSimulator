@@ -47,33 +47,35 @@ namespace BasketballPlayerSimulator.Builders
             };
 
             playerSplitOptions.MeasureType = "Base";
-            GetStats(playerSplitOptions, GetBaseStats, playerStats);
+            GetStats(playerSplitOptions, GetBaseStats, playerStats, "Base");
 
             playerSplitOptions.MeasureType = "Advanced";
-            GetStats(playerSplitOptions, GetAdvancedStats, playerStats);
+            GetStats(playerSplitOptions, GetAdvancedStats, playerStats, "Advanced");
 
             playerSplitOptions.MeasureType = "Misc";
-            GetStats(playerSplitOptions, GetMiscStats, playerStats);
+            GetStats(playerSplitOptions, GetMiscStats, playerStats, "Misc");
 
             playerSplitOptions.MeasureType = "Scoring";
-            GetStats(playerSplitOptions, GetScoringStats, playerStats);
+            GetStats(playerSplitOptions, GetScoringStats, playerStats, "Scoring");
 
             playerSplitOptions.MeasureType = "Usage";
-            GetStats(playerSplitOptions, GetUsageStats, playerStats);
+            GetStats(playerSplitOptions, GetUsageStats, playerStats, "Usage");
 
             player.Stats.Add(playerStats);
             Console.WriteLine("{0} : {1} : {2}", player.Name, targetSeason, seasonType);
         }
 
-        private async void GetStats(PlayerSplitOptions playerSplitOptions, Action<PlayerStats, List<Data>> getStats, PlayerStats playerStats)
+        private void GetStats(PlayerSplitOptions playerSplitOptions, Action<PlayerStats, List<Data>> getStats, PlayerStats playerStats, string measureType)
         {
-            var stats = await GetStatsAsync(playerSplitOptions);
+            playerSplitOptions.MeasureType = measureType;
+            var stats = GetStatsAsync(playerSplitOptions);
+            Console.WriteLine(measureType);
             stats.ResultSets.ForEach(resultSet => getStats.Invoke(playerStats, resultSet.Data));
         }
 
-        private Task<Response> GetStatsAsync(PlayerSplitOptions playerSplitOptions)
+        private Response GetStatsAsync(PlayerSplitOptions playerSplitOptions)
         {
-            return Task.Factory.StartNew(() => NbaReader.GetPlayerSplitsAsync(playerSplitOptions));
+            return NbaReader.GetPlayerSplitsAsync(playerSplitOptions);
         }
 
         private void GetUsageStats(PlayerStats playerStats, List<Data> dataSet)
