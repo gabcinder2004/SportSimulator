@@ -196,9 +196,7 @@ namespace ApiReader
         private Response GetInformationAsync(NBAEndPoints endpoint, List<Parameter> parameters)
         {
             var fullUrl = string.Format("{0}{1}", BaseUrl, _endPoints[endpoint]);
-            var response = ApiCaller.ExecuteCallAsync<Response>(fullUrl, parameters).Result;
-            response.OrganizeResults();
-            return response;
+            return ApiCaller.ExecuteCallAsync(fullUrl, parameters).Result;
         }
     }
 }

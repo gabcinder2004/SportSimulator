@@ -46,33 +46,34 @@ namespace BasketballPlayerSimulator.Builders
                 LastNGames = "0",
             };
 
-            // Traditional
             playerSplitOptions.MeasureType = "Base";
-            var traditionalPlayerSplits = NbaReader.GetPlayerSplitsAsync(playerSplitOptions);
-            traditionalPlayerSplits.ResultSets.ForEach(resultSet => GetBaseStats(playerStats, resultSet.Data));
+            GetStats(playerSplitOptions, GetBaseStats, playerStats);
 
-            // Advanced stats
             playerSplitOptions.MeasureType = "Advanced";
-            var advancedPlayerSplits = NbaReader.GetPlayerSplitsAsync(playerSplitOptions);
-            advancedPlayerSplits.ResultSets.ForEach(resultSet => GetAdvancedStats(playerStats, resultSet.Data));
+            GetStats(playerSplitOptions, GetAdvancedStats, playerStats);
 
-            // Misc stats
             playerSplitOptions.MeasureType = "Misc";
-            var miscPlayerSplits = NbaReader.GetPlayerSplitsAsync(playerSplitOptions);
-            miscPlayerSplits.ResultSets.ForEach(resultSet => GetMiscStats(playerStats, resultSet.Data));
+            GetStats(playerSplitOptions, GetMiscStats, playerStats);
 
-            // Scoring stats
             playerSplitOptions.MeasureType = "Scoring";
-            var scoringPlayerSplits = NbaReader.GetPlayerSplitsAsync(playerSplitOptions);
-            scoringPlayerSplits.ResultSets.ForEach(resultSet => GetScoringStats(playerStats, resultSet.Data));
+            GetStats(playerSplitOptions, GetScoringStats, playerStats);
 
-            // Usage stats
             playerSplitOptions.MeasureType = "Usage";
-            var usagePlayerSplits = NbaReader.GetPlayerSplitsAsync(playerSplitOptions);
-            usagePlayerSplits.ResultSets.ForEach(resultSet => GetUsageStats(playerStats, resultSet.Data));
-
+            GetStats(playerSplitOptions, GetUsageStats, playerStats);
+           
             player.Stats.Add(playerStats);
             Console.WriteLine("{0} : {1} : {2}", player.Name, targetSeason, seasonType);
+        }
+
+        private async void GetStats(PlayerSplitOptions playerSplitOptions, Action<PlayerStats, List<Data>> getStats, PlayerStats playerStats)
+        {
+            var stats = await GetStatsAsync(playerSplitOptions);
+            stats.ResultSets.ForEach(resultSet => getStats.Invoke(playerStats, resultSet.Data));
+        }
+
+        private Task<Response> GetStatsAsync(PlayerSplitOptions playerSplitOptions)
+        {
+            return Task.Factory.StartNew(() => NbaReader.GetPlayerSplitsAsync(playerSplitOptions));
         }
 
         private void GetUsageStats(PlayerStats playerStats, List<Data> dataSet)

@@ -27,7 +27,7 @@ namespace ApiReader
             return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public static async Task<T> ExecuteCallAsync<T>(string url, List<Parameter> parameters) 
+        public static async Task<Response> ExecuteCallAsync(string url, List<Parameter> parameters) 
         {
             var client = new RestClient(url);
 
@@ -37,7 +37,9 @@ namespace ApiReader
             var cancellationTokenSource = new CancellationTokenSource();
 
             var response = await client.ExecuteTaskAsync(request, cancellationTokenSource.Token);
-            return JsonConvert.DeserializeObject<T>(response.Content);
+            var deserialized = JsonConvert.DeserializeObject<Response>(response.Content);
+            deserialized.OrganizeResults();
+            return deserialized;
         }
     }
 }
