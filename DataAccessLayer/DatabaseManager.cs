@@ -25,11 +25,9 @@ namespace DataAccessLayer
         public async void AddTeam(string team)
         {
             Console.WriteLine("Adding team");
-                var collection = Database.GetCollection<BsonDocument>("Teams");
-                var document = BsonSerializer.Deserialize<BsonDocument>(team);
-                await collection.InsertOneAsync(document);
-            
-
+            var collection = Database.GetCollection<BsonDocument>("Teams");
+            var document = BsonSerializer.Deserialize<BsonDocument>(team);
+            await collection.InsertOneAsync(document);
         }
 
         public bool DoesRowExist(string tableName, string columnName, string value)

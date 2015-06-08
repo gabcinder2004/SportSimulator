@@ -37,9 +37,9 @@ namespace ApiReader
             var cancellationTokenSource = new CancellationTokenSource();
 
             var response = await client.ExecuteTaskAsync(request, cancellationTokenSource.Token);
-            var deserialized = JsonConvert.DeserializeObject<Response>(response.Content);
-            deserialized.OrganizeResults();
-            return deserialized;
+            var deserializedResponse = JsonConvert.DeserializeObject<Response>(response.Content);
+            deserializedResponse.OrganizeResults();
+            return deserializedResponse;
         }
     }
 }

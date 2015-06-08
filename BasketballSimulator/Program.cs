@@ -15,11 +15,14 @@ namespace BasketballSimulator
     {
         public static void Main(string[] args)
         {
+            var players = new List<Player>();
             var teamBuilder = new TeamBuilder();
+            var playerBuilder = new PlayerBuilder();
+            var dataManager = new DatabaseManager();
+
             var teams = teamBuilder.GetIds();
             teams.ForEach(team => teamBuilder.GetRoster(team, "2014-15"));
             teams.ForEach(team => teamBuilder.GetCommonInfo(team, "2014-15", "Regular Season"));
-            var playerBuilder = new PlayerBuilder();
 
             teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2014-15", "Regular Season")));
             teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2014-15", "Playoffs")));
@@ -32,18 +35,17 @@ namespace BasketballSimulator
             teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2010-11", "Regular Season")));
             teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2010-11", "Playoffs")));
 
-            var dataManager = new DatabaseManager();
+            // MONGODB STUFF BELOW
+
             foreach (var serializedTeam in teams.Select(JsonConvert.SerializeObject))
             {
                 dataManager.AddTeam(serializedTeam);
             }
 
-            var players = new List<Player>();
             teams.ForEach(team => team.Roster.ForEach(player => players.Add(player)));
 
-            foreach (var player in players)
+            foreach (var serializedPlayer in players.Select(JsonConvert.SerializeObject))
             {
-                var serializedPlayer = JsonConvert.SerializeObject(player);
                 dataManager.AddPlayer(serializedPlayer);
             }
         }

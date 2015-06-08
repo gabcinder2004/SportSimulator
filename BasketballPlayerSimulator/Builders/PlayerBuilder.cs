@@ -60,7 +60,7 @@ namespace BasketballPlayerSimulator.Builders
 
             playerSplitOptions.MeasureType = "Usage";
             GetStats(playerSplitOptions, GetUsageStats, playerStats);
-           
+
             player.Stats.Add(playerStats);
             Console.WriteLine("{0} : {1} : {2}", player.Name, targetSeason, seasonType);
         }
