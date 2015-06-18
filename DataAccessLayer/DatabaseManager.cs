@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using BasketballPlayerSimulator.Models;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace DataAccessLayer
@@ -16,36 +12,39 @@ namespace DataAccessLayer
         private MongoClient Client { get; set; }
         private IMongoDatabase Database { get; set; }
 
-        public DatabaseManager()
+        public DatabaseManager(string connectionString)
         {
-            Client = new MongoClient("mongodb://localhost:27017");
-            Database = Client.GetDatabase("NBA");
+            Client = new MongoClient(connectionString);
+            Database = Client.GetDatabase("nba");
         }
 
-        public async void AddTeam(string team)
+        public async void AddTeam(Team team)
         {
-            Console.WriteLine("Adding team");
-            var collection = Database.GetCollection<BsonDocument>("Teams");
-            var document = BsonSerializer.Deserialize<BsonDocument>(team);
-            await collection.InsertOneAsync(document);
+            Console.WriteLine("Adding team: {0}", team.Name);
+            var collection = Database.GetCollection<Team>("Teams");
+            await collection.InsertOneAsync(team);
         }
 
-        public bool DoesRowExist(string tableName, string columnName, string value)
+        public async void AddTeams(List<Team> teams)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq(columnName, value);
-            var table = Database.GetCollection<BsonDocument>(tableName);
-            var document = table.Find(filter).FirstAsync();
+            Console.WriteLine("Adding all teams");
 
-            return document != null;
+            var collection = Database.GetCollection<Team>("teams");
+            await collection.InsertManyAsync(teams);
         }
 
-        public async void AddPlayer(string serializedPlayer)
+        public async void AddPlayer(Player player)
         {
-            Console.WriteLine("Adding player");
-            var collection = Database.GetCollection<BsonDocument>("Players");
-            var document = BsonSerializer.Deserialize<BsonDocument>(serializedPlayer);
-            await collection.InsertOneAsync(document);
+            Console.WriteLine("Adding player: {0}", player.Name);
+            var collection = Database.GetCollection<Player>("Players");
+            await collection.InsertOneAsync(player);
+        }
 
+        public async void AddCoach(Coach coach)
+        {
+            Console.WriteLine("Adding coach: {0}", coach.Name);
+            var collection = Database.GetCollection<Coach>("Coaches");
+            await collection.InsertOneAsync(coach);
         }
     }
 }

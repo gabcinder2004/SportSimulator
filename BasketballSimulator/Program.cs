@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,46 +17,55 @@ namespace BasketballSimulator
     {
         public static void Main(string[] args)
         {
-            var players = new List<Player>();
-            var teamBuilder = new TeamBuilder();
-            var playerBuilder = new PlayerBuilder();
-            var dataManager = new DatabaseManager();
+            var test = File.Create(@"../../../data/test.txt");
+            //GetDataFromServiceAndStore();
+        }
 
-            var teams = teamBuilder.GetIds();
-            teams.ForEach(team => teamBuilder.GetRoster(team, "2014-15"));
-            teams.ForEach(team => teamBuilder.GetCommonInfo(team, "2014-15", "Regular Season"));
+        private static void GetDataFromServiceAndStore()
+        {
+            //var teamBuilder = new TeamBuilder();
+            //var playerBuilder = new PlayerBuilder();
+            //var coachBuilder = new CoachBuilder();
+            var dataManager = new DatabaseManager("mongodb://gabcinder2004:cooper@ds047632.mongolab.com:47632/nba?maxPoolSize=5000");
+            //var dataManager = new DatabaseManager("mongodb://localhost:27017");
 
-            //I moved tasks out here due to concurrency issues within inviduals methods. This works well though
-            Task[] t = new Task[4];
-            t[0] = Task.Run(() => teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2014-15", "Regular Season"))));
-            t[1] = Task.Run(() =>teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2014-15", "Playoffs"))));
-            t[2] = Task.Run(() =>teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2013-14", "Regular Season"))));
-            t[3] = Task.Run(() =>teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2013-14", "Playoffs"))));
+            //var teams = teamBuilder.GetIds();
 
-            //teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2012-13", "Regular Season")));
-            //teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2012-13", "Playoffs")));
-            //teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2011-12", "Regular Season")));
-            //teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2011-12", "Playoffs")));
-            //teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2010-11", "Regular Season")));
-            //teams.ForEach(team => team.Roster.ForEach(player => playerBuilder.GetPlayerSplits(player, "2010-11", "Playoffs")));
+            //teams.ForEach(team => teamBuilder.GetCommonInfo(team, "2014-15", "Regular Season"));
 
-            Task.WaitAll(t);
+            //var players = playerBuilder.GetAllPlayersBasicInfo(teams, "2014-15");
+            //var coaches = coachBuilder.GetAllCoachesBasicInfo(teams, "2014-15");
+
+            //var tasks = new List<Task>
+            //{
+            //    Task.Run( () => players.ForEach(player => playerBuilder.GetPlayerSplits(player, "2014-15", "Regular Season"))),
+            //    Task.Run( () => players.ForEach(player => playerBuilder.GetPlayerSplits(player, "2014-15", "Playoffs"))),
+            //    Task.Run( () => players.ForEach(player => playerBuilder.GetPlayerSplits(player, "2013-14", "Regular Season"))),
+            //    Task.Run( () => players.ForEach(player => playerBuilder.GetPlayerSplits(player, "2013-14", "Playoffs")))
+            //};
+
+            //Task.WaitAll(tasks.ToArray());
+
+            //var serializedTeams = JsonConvert.SerializeObject(teams);
+            //var serializedPlayers = JsonConvert.SerializeObject(players);
+            //var serializedCoaches = JsonConvert.SerializeObject(coaches);
+
+            //File.WriteAllText(@"C:\Projects\BasketballPlayerSimulator\teams.txt", serializedTeams);
+            //File.WriteAllText(@"C:\Projects\BasketballPlayerSimulator\players.txt", serializedPlayers);
+            //File.WriteAllText(@"C:\Projects\BasketballPlayerSimulator\coaches.txt", serializedCoaches);
 
             // MONGODB STUFF BELOW
 
-            foreach (var serializedTeam in teams.Select(JsonConvert.SerializeObject))
-            {
-                dataManager.AddTeam(serializedTeam);
-            }
+            var teams = JsonConvert.DeserializeObject<List<Team>>(File.ReadAllText(@"../../../data/teams.txt"));
+            var players = JsonConvert.DeserializeObject<List<Player>>(File.ReadAllText(@"../../../data/players.txt"));
+            var coaches = JsonConvert.DeserializeObject<List<Coach>>(File.ReadAllText(@"../../../data/coaches.txt"));
 
-            teams.ForEach(team => team.Roster.ForEach(player => players.Add(player)));
+            teams.ForEach(dataManager.AddTeam);
+            players.ForEach(dataManager.AddPlayer);
+            coaches.ForEach(dataManager.AddCoach);
+            //dataManager.AddTeams(teams);
 
-            foreach (var serializedPlayer in players.Select(JsonConvert.SerializeObject))
-            {
-                dataManager.AddPlayer(serializedPlayer);
-            }
-
-            
+            Thread.Sleep(20000);
         }
     }
 }

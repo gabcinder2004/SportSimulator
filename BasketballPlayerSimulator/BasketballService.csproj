@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\CoachBuilder.cs" />
+    <Compile Include="Builders\PlayerStatBuilder.cs" />
     <Compile Include="Models\Stats\AdvancedStats.cs" />
     <Compile Include="Models\Stats\BaseStats.cs" />
     <Compile Include="Models\Coach.cs" />

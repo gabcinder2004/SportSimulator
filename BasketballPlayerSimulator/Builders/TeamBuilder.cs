@@ -14,30 +14,6 @@ namespace BasketballPlayerSimulator.Builders
             NbaReader = new NbaReader();
         }
 
-        public void GetRoster(Team team, string season)
-        {
-            var roster = NbaReader.GetCommonTeamRoster(team.Id, season);
-            roster.ResultSets.Single(x => x.Name == "CommonTeamRoster").Data.ForEach(
-                data => team.Roster.Add(new Player()
-                {
-                    Age = data.Mapping["AGE"],
-                    Experience = data.Mapping["EXP"],
-                    Height = data.Mapping["HEIGHT"],
-                    Id = data.Mapping["PLAYER_ID"],
-                    Name = data.Mapping["PLAYER"],
-                    PlayerNumber = data.Mapping["NUM"],
-                    Position = data.Mapping["POSITION"],
-                    Weight = data.Mapping["WEIGHT"]
-                }));
-
-            roster.ResultSets.Single(x => x.Name == "Coaches").Data.ForEach(
-                data => team.Coaches.Add(new Coach
-                {
-                    Id = data.Mapping["COACH_ID"],
-                    Name = data.Mapping["COACH_NAME"],
-                    Type = data.Mapping["COACH_TYPE"]
-                }));
-        }
 
         public void GetCommonInfo(Team team, string season, string seasonType, string leagueId = "00")
         {
